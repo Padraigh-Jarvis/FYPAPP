@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "30602514850",
+    "firebase_url": "https://watch-it-b1404.firebaseio.com",
+    "project_id": "watch-it-b1404",
+    "storage_bucket": "watch-it-b1404.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30602514850:android:2a96773e8ce57e2e",
+        "android_client_info": {
+          "package_name": "fyp.fourthyear.cit.ie.watchit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30602514850-ol6lg2jfh0va4sk5ibsf2ogilodqq9m7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fyp.fourthyear.cit.ie.watchit",
+            "certificate_hash": "0e36940aa29a3dba62fa8901bd9f7da2a488c9f0"
+          }
+        },
+        {
+          "client_id": "30602514850-d2so9g13r8qbmictd0i75lsp45oe60mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcMrKA_-pB4_uaxZiz_yzZ9ui-I-pe-jE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30602514850-d2so9g13r8qbmictd0i75lsp45oe60mt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

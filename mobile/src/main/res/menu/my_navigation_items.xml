@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_home"
+        android:title="Home"
+        android:icon="@drawable/home"
+
+         />
+    <item android:id="@+id/menu_data"
+        android:title="View Data"
+        android:icon="@drawable/data"
+        />
+    <item android:id="@+id/menu_meditation"
+        android:title="Meditate"
+        android:icon="@drawable/meditation"
+        />
+    <item android:id="@+id/menu_associate"
+        android:title="Associate"
+        android:icon="@drawable/association"
+        />
+</menu>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:theme="@style/Watchit"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
+
+    <TextView
+        android:id="@+id/register_fill_out_form"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please fill out form"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/register_email"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <TextView
+        android:id="@+id/register_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email address"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/register_email_ET"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_fill_out_form" />
+
+    <EditText
+        android:id="@+id/register_email_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/register_password_TV"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_email" />
+
+    <EditText
+        android:id="@+id/register_password_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/register_confirm_password_TV"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_password_TV" />
+
+    <EditText
+        android:id="@+id/register_confirm_password_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/register"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_TV" />
+
+    <TextView
+        android:id="@+id/register_password_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/register_password_ET"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_email_ET" />
+
+    <TextView
+        android:id="@+id/register_confirm_password_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm password"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/register_confirm_password_ET"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_password_ET" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_ET" />
+</android.support.constraint.ConstraintLayout>

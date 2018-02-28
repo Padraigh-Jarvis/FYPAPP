@@ -1,0 +1,74 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Watchit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="layout.ViewData">
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/StressedDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Time spent stressed in the last week:"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/ViewDataStressedValues"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ViewDataStressedValues"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PLACEHOLDER"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/StressedDetail"
+            app:layout_constraintLeft_toRightOf="@+id/StressedDetail"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
+            android:id="@+id/HRDataButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Vew HR data"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resting_HR_Desc"
+            app:layout_constraintVertical_bias="0.06999999" />
+
+        <TextView
+            android:id="@+id/resting_HR_Desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="36dp"
+            android:text="Latest recorded resting heart rate:"
+            app:layout_constraintEnd_toStartOf="@+id/Resting_HR"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/StressedDetail" />
+
+        <TextView
+            android:id="@+id/Resting_HR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="PlaceHolder"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/resting_HR_Desc"
+            app:layout_constraintTop_toBottomOf="@+id/ViewDataStressedValues" />
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

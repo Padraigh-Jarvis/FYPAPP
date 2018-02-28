@@ -1,0 +1,126 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Watchit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="layout.Home">
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/home1TV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:layout_marginStart="4dp"
+            android:text="Associate allows you to share your data with a registered therapist or disable them from seeing it in the future."
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/homeIV1"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/home2TV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:layout_marginStart="4dp"
+            android:text="Meditate allows you to unwind after a stressful day with a quick breathing exercise"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/home1TV"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/homeIV2"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/home3TV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:layout_marginStart="4dp"
+            android:text="View data allows you to see your stress related data such as HR or how long you've spent stressed in the last week"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/home2TV"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/homeIV3"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/home4TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="21dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="How to use the app?"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/home3TV"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.428" />
+
+        <ImageView
+            android:id="@+id/homeIV1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Associate icon"
+            android:tint="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/home1TV"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/home1TV"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/association_selected" />
+
+        <ImageView
+            android:id="@+id/homeIV2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="meditate icon"
+            android:tint="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/home2TV"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/home2TV"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/meditation_selected" />
+
+        <ImageView
+            android:id="@+id/homeIV3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="view data icon"
+            android:tint="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/home3TV"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/home3TV"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/data_selected" />
+
+        <Button
+            android:id="@+id/home_logout"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Logout"
+            android:textColor="@color/accent_material_dark_1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/home4TV"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toRightOf="@+id/home4TV"
+            app:layout_constraintRight_toRightOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
