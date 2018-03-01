@@ -26,26 +26,21 @@ public class DAO {
     private ArrayList<String> myTherapists;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ArrayList<HeartRate> heartRates;
-    private int hrBaseline;
-    private long hrBaselineTime;
-    private boolean requestBaseline;
+    private double hrBaseline;
     public static DAO getInstance() {
         return ourInstance;
     }
     private int dataAvailable;
     private int hoursStressed;
-    private boolean baselinePolling = true;
 
 
     private DAO() {
         dataAvailable = 0;
         hoursStressed=0;
-        requestBaseline = false;
         myTherapists = new ArrayList<>();
         heartRates = new ArrayList<>();
         myTherapists();
         getPhysiologicalAttributes();
-        readHRBaseline();
         getBasicHistoricalData();
     }
 
@@ -96,65 +91,33 @@ public class DAO {
         ref.child(auth.getUid()).child("Therapists").child(id).setValue(true);
     }
     public void uploadData(HeartRate heartRate,String key){
+        heartRates.add(heartRate);
         ref = DATABASE.getReference("Wearers");
         ref.child(auth.getUid()).child("PhysiologicalAttributes").child("HR").child(key).setValue(heartRate);
     }
-    public void uploadBaseline(int baseline,long time ,String type) {
-        ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("PhysiologicalAttributes").child(type).child("Baseline");
-        ref.child("time").setValue(time);
-        ref.child("HR").setValue(baseline);
-    }
-    private void checkBaseline(String type){
-        Calendar c = Calendar.getInstance();
-        Calendar current  =Calendar.getInstance();
-        if(type.equals("HR")){
-            c.setTimeInMillis(hrBaselineTime);
-            c.add(Calendar.DATE,7); //Change to 7
-            if(c.getTime().compareTo(current.getTime())<0)
-                requestBaseline=true;
-            else
-                requestBaseline = false;
+    public void setHrBaseline(){
+        int counter=0;
+        double dataTotal=0;
+        for(HeartRate hr : heartRates){
+            if(0!=hr.getDataNum()){
+                counter+=hr.getDataNum();
+                dataTotal+=hr.getHeartRate()*hr.getDataNum();
+            }
         }
-
+        hrBaseline = Math.floor(dataTotal/counter);
+        Log.d(TAG, "Baseline:"+hrBaseline+"\tdata total:"+dataTotal +"\tcounter:"+counter);
     }
-    private void readHRBaseline() {
-        baselinePolling=false;
-        ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("PhysiologicalAttributes").child("HR").child("Baseline");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot!=null && dataSnapshot.hasChildren() && dataSnapshot.hasChild("time") && dataSnapshot.hasChild("HR")) {
-                    hrBaselineTime = dataSnapshot.child("time").getValue(Long.class);
-                    hrBaseline = dataSnapshot.child("HR").getValue(Integer.class);
-                    checkBaseline("HR");
-                    baselinePolling=true;
-                }
-                else {
-                    requestBaseline = true;
-                    baselinePolling=true;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-    public boolean getRequestBaseline(){return requestBaseline;}
     private void getPhysiologicalAttributes(){
         ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("PhysiologicalAttributes").child("HR");
-        ref.orderByChild("time").addValueEventListener(new ValueEventListener() {
+        ref.orderByChild("time").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 heartRates = new ArrayList<>();
                 for(DataSnapshot dataEntry :dataSnapshot.getChildren()){
-                    Log.d(TAG,dataEntry.toString());
                     if(dataEntry.child("time").exists() && dataEntry.child("heartRate").exists())
                         heartRates.add(dataEntry.getValue(HeartRate.class));
                 }
+                setHrBaseline();
 
             }
 
@@ -167,7 +130,7 @@ public class DAO {
     public ArrayList<HeartRate> getHeartRates(){
         return this.heartRates;
     }
-    public int getHeartRateBaseline(){return this.hrBaseline;}
+    public double getHeartRateBaseline(){return this.hrBaseline;}
     private void getBasicHistoricalData(){
         ref = DATABASE.getReference("Wearers").child(auth.getUid());
         ref.child("Data_Available").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -203,7 +166,6 @@ public class DAO {
     }
     public int getHoursStressed(){return this.hoursStressed;}
     public int getDataAvailable(){return this.dataAvailable;}
-    public boolean getBaselinePolling(){return this.baselinePolling;}
     public void clearData(){
         ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("PhysiologicalAttributes").child("HR");
         Calendar c = Calendar.getInstance();
@@ -227,6 +189,9 @@ public class DAO {
                             hoursStressed--;
                             deleteRef.child("Hours_Stressed").setValue(hoursStressed);
                         }
+
+                        //don't know it this will work
+                        heartRates.remove(dataSnapshot.getValue(HeartRate.class));
                     }
                 }
             }

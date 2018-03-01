@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,38 +24,20 @@ import layout.Meditate;
 import layout.ViewData;
 
 public class MainMenu extends AppCompatActivity {
-    private DAO dao = DAO.getInstance();
-    private AlertDialog baselinePopup;
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        if (!baselinePopup.isShowing())
-            new AsyncBaselinePoller().execute("");
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.d("TAG","TEST");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-        new DataCollectorService(this);
+        //new DataCollectorService(this);
 
 
 
-        AlertDialog.Builder builder  = new AlertDialog.Builder(this,R.style.Watchit_actionDialog);
-
-        builder.setMessage("Watch it requires your resting heart rate to function properly." +
-                "\n\nTo facilitate this please enable the application on your SmartWatch right after you wake up." +
-                "\n\nYou will be asked to do this once a week for the most accurate results")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }})
-                .setTitle("Resting heart rate");
-        baselinePopup = builder.create();
-
-
+        Intent service = new Intent(this,DataCollectorService.class);
+        startService(service);
+        DAO.getInstance();
 
 
 
@@ -115,27 +98,6 @@ public class MainMenu extends AppCompatActivity {
                 ft.replace(R.id.content, fragment);
                 ft.commit();
             }
-        }
-    }
-
-    private class AsyncBaselinePoller extends AsyncTask<String,Void,Boolean>{
-
-        @Override
-        protected Boolean doInBackground(String... strs) {
-            do{
-                try {
-                    Thread.sleep(2000);
-
-                }catch(Exception e){
-                    Log.e("TAG" , "A async error occured " + e);
-                }
-            }while (!dao.getRequestBaseline() && !dao.getBaselinePolling());
-            return dao.getRequestBaseline();
-        }
-        @Override
-        protected void onPostExecute(Boolean result){
-            if(result)
-                baselinePopup.show();
         }
     }
 

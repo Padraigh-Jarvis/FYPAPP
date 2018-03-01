@@ -29,7 +29,6 @@ import fyp.fourthyear.cit.ie.watchit.Domain.StressCalculator;
 public class DataCollectorService extends Service implements  DataClient.OnDataChangedListener,SensorEventListener {
     private final String TAG = "Data Collector Service";
     private final int motionCap = 3;
-    private final int baselineTimer = 10 ;
 
     private StressCalculator stressCalculator;
     private ArrayList<Float> lastHourData;
@@ -41,26 +40,24 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
     private boolean exercise;
     private long exerciseTime;
     public DataCollectorService(){}
-    public DataCollectorService(Context cnt){
-        Wearable.getDataClient(cnt).addListener(this);
+    @Override
+    public void onCreate(){
+        Wearable.getDataClient(this).addListener(this);
         stressCalculator = new StressCalculator();
-
 
         SensorManager sensorManager;
         Sensor accelerometer;
         Sensor gravity;
-        sensorManager = (SensorManager)cnt.getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager)this.getSystemService(SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gravityValues = new double[3];
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-
 
         boolean isRegistered = sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
         logger(TAG,"gravity listener on: " + isRegistered);
 
         isRegistered = sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         logger(TAG,"accelerometer listener on: " + isRegistered);
-
 
         lastUpdate= 0;
         lastHourData = new ArrayList<>();
@@ -73,13 +70,6 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
         return null;
     }
 
-
-    //TODO this is test. it could mess up the app
-    @Override
-    public void onDestroy(){
-        uploadData();
-
-    }
 
     @Override
     public void onDataChanged(DataEventBuffer dataEventBuffer) {
@@ -104,16 +94,6 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
         }
     }
     private void uploadData(){
-        //if the data for the hour is timed between 6 and 9 am
-        if(dao.getRequestBaseline() && hourStart>5 && hourStart<10){
-            ArrayList<HeartRate> temp = dao.getHeartRates();
-            Calendar cal  = Calendar.getInstance();
-            cal.setTimeInMillis(temp.get(temp.size()-1).getTime());
-            //and if data for the previous hour does not exist
-            if(cal.get(Calendar.HOUR_OF_DAY) != hourStart-1)
-                calculateBaseline();
-
-        }
 
         boolean stressed = stressCalculator.determineStress(lastHourData,millsecondsStart);
         float hourHRData = 0;
@@ -123,8 +103,7 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(millsecondsStart);
         dao.uploadData(new HeartRate(millsecondsStart, (int) hourHRData,stressed,lastHourData.size()),c.getTime().toString());
-
-
+        dao.setHrBaseline();
         lastHourData = new ArrayList<>();
         dao.clearData();
     }
@@ -138,11 +117,11 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
                 lastHourData.add(data);
                 hourStart = hourValue;
                 millsecondsStart = time;
-            } else {
-                if (hourValue != hourStart) {
-
+            }
+            else {
+                if (hourValue != hourStart)
                     uploadData();
-                } else
+                else
                     lastHourData.add(data);
 
             }
@@ -154,21 +133,7 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
                 exercise=false;
         }
     }
-    private void calculateBaseline(){
-        int runningTotal= 0;
-        int n;
-        if(lastHourData.size()>=baselineTimer)
-            n=baselineTimer;
-        else
-            n=lastHourData.size();
-        for(int i =0;i<n;i++)
-            runningTotal += Math.round(lastHourData.get(i));
-        int averageBaseline = runningTotal/n;
-        logger(TAG,"Baseline:"+averageBaseline);
 
-        dao.uploadBaseline(averageBaseline,Calendar.getInstance().getTimeInMillis(),"HR");
-
-    }
 
 
     private void logger(String tag, String message)

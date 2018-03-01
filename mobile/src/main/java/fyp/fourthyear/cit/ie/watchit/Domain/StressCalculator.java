@@ -17,8 +17,11 @@ public class StressCalculator {
 
 
     public boolean determineStress(ArrayList<Float> hourData,long time){
-        int baseline = dao.getHeartRateBaseline();
-
+        double baseline = dao.getHeartRateBaseline();
+        if (0==baseline){
+            dao.uploadStressTest(hourData,time);
+            return false;
+        }
         float stressCounter=0;
         for(int index = 0; index<hourData.size();index++){
             if(index == 0 && hourData.get(index) > baseline+BUFFER)
