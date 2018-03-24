@@ -1,5 +1,6 @@
 package layout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
 
 import fyp.fourthyear.cit.ie.watchit.R;
+import fyp.fourthyear.cit.ie.watchit.Services.DataCollectorService;
 
 public class Home extends Fragment {
     private FirebaseAuth mAuth;
@@ -26,6 +28,7 @@ public class Home extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
         Button logout =  view.findViewById(R.id.home_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

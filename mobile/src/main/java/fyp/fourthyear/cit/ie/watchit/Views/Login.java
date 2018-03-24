@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import fyp.fourthyear.cit.ie.watchit.R;
+import fyp.fourthyear.cit.ie.watchit.Services.DataCollectorService;
 
 public class Login extends AppCompatActivity {
     private final String TAG="LOGIN FIREBASE AUTH";
@@ -52,6 +53,8 @@ public class Login extends AppCompatActivity {
                     String currentActivity = am.getAppTasks().get(0).getTaskInfo().topActivity.getClassName();
                     if(currentActivity.contains("MainMenu"))
                     {
+                        Intent service = new Intent(getApplicationContext(),DataCollectorService.class);
+                        stopService(service);
                         Toast.makeText(Login.this, "You have been signed out",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), Login.class);
                         startActivity(intent);

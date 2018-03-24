@@ -1,11 +1,9 @@
 package fyp.fourthyear.cit.ie.watchit.DAO;
 
 
-import android.provider.CalendarContract;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +21,7 @@ public class DAO {
     private static final DAO ourInstance = new DAO();
     private final FirebaseDatabase DATABASE = FirebaseDatabase.getInstance();
     private DatabaseReference ref;
+    private String myName;
     private ArrayList<String> myTherapists;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ArrayList<HeartRate> heartRates;
@@ -42,6 +41,7 @@ public class DAO {
         myTherapists();
         getPhysiologicalAttributes();
         getBasicHistoricalData();
+        getName();
     }
 
     public FirebaseDatabase getDATABASE(){
@@ -64,10 +64,10 @@ public class DAO {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                myTherapists = new ArrayList<>();
-                for(DataSnapshot child : dataSnapshot.getChildren())
-                {
-                    myTherapists.add(child.getKey());
+                myTherapists = new ArrayList<String>();
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                   // String[] data = {child.getKey(),child.child("email").getValue().toString()};
+                    myTherapists.add(child.getValue().toString());
                 }
             }
             @Override
@@ -82,13 +82,13 @@ public class DAO {
         ref = DATABASE.getReference("Wearers");
         ref.child(auth.getUid()).child("Therapists").child(id).setValue(null);
     }
-    public void addAssociate(String id){
+    public void addAssociate(String[] id){
         //Add wearer ID to therapist
         ref = DATABASE.getReference("Therapists");
-        ref.child(id).child("patients").child(auth.getUid()).setValue(true);
+        ref.child(id[0]).child("patients").child(auth.getUid()).setValue(myName);
         //add therapist ID to wearer
         ref = DATABASE.getReference("Wearers");
-        ref.child(auth.getUid()).child("Therapists").child(id).setValue(true);
+        ref.child(auth.getUid()).child("Therapists").child(id[0]).setValue(id[1]);
     }
     public void uploadData(HeartRate heartRate,String key){
         heartRates.add(heartRate);
@@ -106,6 +106,20 @@ public class DAO {
         }
         hrBaseline = Math.floor(dataTotal/counter);
         Log.d(TAG, "Baseline:"+hrBaseline+"\tdata total:"+dataTotal +"\tcounter:"+counter);
+    }
+    private void getName(){
+        ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("Name");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()!=null){
+                    myName = dataSnapshot.getValue().toString();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
     private void getPhysiologicalAttributes(){
         ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("PhysiologicalAttributes").child("HR");
@@ -168,45 +182,55 @@ public class DAO {
     public int getDataAvailable(){return this.dataAvailable;}
     public void clearData(){
         ref = DATABASE.getReference("Wearers").child(auth.getUid()).child("PhysiologicalAttributes").child("HR");
-        Calendar c = Calendar.getInstance();
+        //This will set the removal time to 7 days
+        final Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE,-7);
         final long boundaryTime = c.getTimeInMillis();
-        ref.orderByChild("time").addChildEventListener(new ChildEventListener() {
+
+        ref.orderByChild("time").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(!dataSnapshot.getKey().equals("Baseline")) {
-                    if(dataSnapshot.child("time").getValue(Long.class) < boundaryTime){
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTimeInMillis(dataSnapshot.child("time").getValue(Long.class));
-                        DatabaseReference deleteRef= dataSnapshot.getRef();
-                        deleteRef.setValue(null);
-                        deleteRef=DATABASE.getReference("Wearers").child(auth.getUid()).child("Detailed_Stress_Data").child(cal.getTime().toString());
-                        deleteRef.setValue(null);
-                        deleteRef=DATABASE.getReference("Wearers").child(auth.getUid());
-                        dataAvailable--;
-                        deleteRef.child("Data_Available").setValue(dataAvailable);
-                        if(dataSnapshot.hasChild("stressed")) {
-                            hoursStressed--;
-                            deleteRef.child("Hours_Stressed").setValue(hoursStressed);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG , dataSnapshot.toString());
+                for(DataSnapshot dataPoint : dataSnapshot.getChildren()) {
+                    //If true then the datapoint is 1 week or more old
+                    if(dataPoint.getChildrenCount()!=4){
+                        Log.e(TAG, "Error physiological attribute for HR at time "+ dataPoint.getKey() + " does not have enough children");
+                        continue;
+                    }
+                    long dataPointTime = dataPoint.child("time").getValue(Long.class);
+                    if(dataPointTime < boundaryTime){
+                        String timeToRemove = dataPoint.getKey();
+                        //Remove data from physiological attributes
+                        dataPoint.getRef().setValue(null);
+                        //Remove data from detailed stress data
+                        DATABASE.getReference("Wearers").child(auth.getUid()).child("Detailed_Stress_Data").child(timeToRemove).setValue(null);
+                        //Remove the data from the local heart rate data
+                        for(int index = 0; index<heartRates.size();index++){
+                            if(heartRates.get(index).getTime() == dataPointTime){
+                                heartRates.remove(index);
+                                break;
+                            }
+
                         }
 
-                        //don't know it this will work
-                        heartRates.remove(dataSnapshot.getValue(HeartRate.class));
                     }
+
+
                 }
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //Check to see if the number of hours stressed has changed, if so upload the new amount of hours stressed
+                int hoursStressedRecount=0;
+                for(HeartRate heartRate : heartRates){
+                    if(heartRate.getStressed())
+                        hoursStressedRecount++;
+                }
+                if(hoursStressed != hoursStressedRecount) {
+                    hoursStressed = hoursStressedRecount;
+                    DATABASE.getReference("Wearers").child(auth.getUid()).child("Hours_Stressed").setValue(hoursStressed);
+                }
 
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //The amount of data available will have changed, so upload the new value
+                dataAvailable = heartRates.size();
+                DATABASE.getReference("Wearers").child(auth.getUid()).child("Data_Available").setValue(dataAvailable);
 
             }
 
@@ -215,8 +239,6 @@ public class DAO {
 
             }
         });
-
-
     }
 
 }

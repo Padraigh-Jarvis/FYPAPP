@@ -10,7 +10,7 @@ import fyp.fourthyear.cit.ie.watchit.DAO.DAO;
 public class StressCalculator {
 
     private DAO dao = DAO.getInstance();
-    private final int BUFFER = 10;
+    private final int BUFFER = 0;
 
     public StressCalculator(){}
 

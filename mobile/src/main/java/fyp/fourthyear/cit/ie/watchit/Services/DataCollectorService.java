@@ -28,7 +28,7 @@ import fyp.fourthyear.cit.ie.watchit.Domain.StressCalculator;
 
 public class DataCollectorService extends Service implements  DataClient.OnDataChangedListener,SensorEventListener {
     private final String TAG = "Data Collector Service";
-    private final int motionCap = 3;
+    private final int motionCap = 2;
 
     private StressCalculator stressCalculator;
     private ArrayList<Float> lastHourData;
