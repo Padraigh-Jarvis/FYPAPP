@@ -29,8 +29,6 @@ public class ViewData extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_data, container, false);
         TextView stressInfo = view.findViewById(R.id.ViewDataStressedValues);
 
-//        dao.clearData();
-
         int dataAvailable = dao.getDataAvailable();
         int hoursStressed = dao.getHoursStressed();
 
@@ -40,7 +38,7 @@ public class ViewData extends Fragment {
         stressInfo.setText(stressedString);
 
         TextView restingHR = view.findViewById(R.id.Resting_HR);
-        String restingHRString = dao.getHeartRateBaseline()+" bmp";
+        String restingHRString = dao.getHeartRateBaseline()+" bpm";
         restingHR.setText(restingHRString);
 
         Button HRbtn = view.findViewById(R.id.HRDataButton);

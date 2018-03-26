@@ -18,12 +18,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import fyp.fourthyear.cit.ie.watchit.DAO.DAO;
 import fyp.fourthyear.cit.ie.watchit.R;
-import fyp.fourthyear.cit.ie.watchit.Views.Login;
 
 public class Associate extends Fragment {
     private DAO dao = DAO.getInstance();
@@ -115,8 +113,10 @@ public class Associate extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 therapistList = new ArrayList<>();
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
-                    String[] data = {child.getKey(),child.child("email").getValue().toString()};
-                    therapistList.add(data);
+                    if (child.child("email").getValue()!= null ){
+                        String[] data = {child.getKey(),child.child("email").getValue().toString()};
+                        therapistList.add(data);
+                    }
                 }
             }
             @Override

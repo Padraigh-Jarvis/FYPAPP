@@ -1,10 +1,14 @@
 package fyp.fourthyear.cit.ie.watchit.Domain;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ public class HRDataAdapter extends RecyclerView.Adapter<HRDataAdapter.ViewHolder
 
     private ArrayList<HeartRate> hrList;
     private int layout;
+    //TODO Add icon to tell if the hour was "stressed" or not
     public HRDataAdapter(ArrayList<HeartRate> hrList, int layout){
         this.hrList=hrList;
         this.layout = layout;
@@ -27,12 +32,16 @@ public class HRDataAdapter extends RecyclerView.Adapter<HRDataAdapter.ViewHolder
         private TextView day;
         private TextView hour;
         private TextView data;
+        private ImageView stressed;
+
 
         public ViewHolder(View view) {
             super(view);
             this.day = view.findViewById(R.id.day);
             this.hour = view.findViewById(R.id.hour);
             this.data = view.findViewById(R.id.data);
+            this.stressed = view.findViewById(R.id.stressed);
+
         }
     }
     @Override
@@ -51,6 +60,10 @@ public class HRDataAdapter extends RecyclerView.Adapter<HRDataAdapter.ViewHolder
         holder.day.setText(getDay(c.get(Calendar.DAY_OF_WEEK)));
         holder.hour.setText(Integer.toString(c.get(Calendar.HOUR_OF_DAY)));
         holder.data.setText(Integer.toString(hrData.getHeartRate()));
+        if(hrData.getStressed())
+            holder.stressed.setBackgroundResource(R.drawable.ic_red_circle);
+        else
+            holder.stressed.setBackgroundResource(R.drawable.ic_green_circle);
     }
 
 

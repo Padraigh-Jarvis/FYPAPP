@@ -1,22 +1,15 @@
 package layout;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import fyp.fourthyear.cit.ie.watchit.DAO.DAO;
 import fyp.fourthyear.cit.ie.watchit.Domain.HRDataAdapter;
-import fyp.fourthyear.cit.ie.watchit.Domain.HeartRate;
 import fyp.fourthyear.cit.ie.watchit.R;
 
 public class HRData extends Fragment {

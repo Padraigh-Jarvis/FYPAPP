@@ -10,4 +10,7 @@
     <color name="primary_material_dark">#374554</color>
     <color name="dark_grey">#434c56</color>
     <color name="off_white">#ffdede</color>
+    <color name="green">#0bdc0b</color>
+    <color name="red">#ff000d</color>
+
 </resources>

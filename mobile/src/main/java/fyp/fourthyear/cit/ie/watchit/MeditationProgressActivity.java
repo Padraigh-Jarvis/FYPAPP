@@ -1,0 +1,13 @@
+package fyp.fourthyear.cit.ie.watchit;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class MeditationProgressActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meditation_progress);
+    }
+}
