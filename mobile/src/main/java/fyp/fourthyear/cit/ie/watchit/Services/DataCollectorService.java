@@ -1,13 +1,14 @@
 package fyp.fourthyear.cit.ie.watchit.Services;
 
 
+
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -29,7 +30,7 @@ import fyp.fourthyear.cit.ie.watchit.Domain.StressCalculator;
 public class DataCollectorService extends Service implements  DataClient.OnDataChangedListener,SensorEventListener {
     private final String TAG = "Data Collector Service";
     private final int motionCap = 2;
-
+    private final IBinder mBinder = new LocalBinder();
     private StressCalculator stressCalculator;
     private ArrayList<Float> lastHourData;
     private int hourStart;
@@ -39,6 +40,8 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
     private double gravityValues[];
     private boolean exercise;
     private long exerciseTime;
+    private ArrayList<Integer> meditationData;
+    private boolean collectMeditationData=false;
     public DataCollectorService(){}
     @Override
     public void onCreate(){
@@ -63,14 +66,28 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
         lastHourData = new ArrayList<>();
         exercise=false;
     }
+    public class LocalBinder extends Binder {
+        public DataCollectorService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return DataCollectorService.this;
+        }
 
+    }
+    public void collectMeditationData(){
+        meditationData=new ArrayList<Integer>();
+        collectMeditationData=true;
+        Log.d("WatchitDebug DCS", ""+meditationData);
+    }
+    public ArrayList<Integer> stopCollectingMeditationData(){
+        collectMeditationData=false;
+        Log.d("WatchitDebug DCS", ""+meditationData);
+        return this.meditationData;
+    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
-
-
     @Override
     public void onDataChanged(DataEventBuffer dataEventBuffer) {
 
@@ -108,6 +125,8 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
         dao.clearData();
     }
     private void updateData(long time, float data){
+        if(collectMeditationData)
+            meditationData.add((int)data);
         if(!exercise) {
             logger(TAG,"No exercise");
             Calendar c = Calendar.getInstance();
@@ -133,14 +152,10 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
                 exercise=false;
         }
     }
-
-
-
     private void logger(String tag, String message)
     {
         Log.d(tag,message);
     }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -180,7 +195,6 @@ public class DataCollectorService extends Service implements  DataClient.OnDataC
             }
         }
     }
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         logger(TAG,sensor.getStringType() + accuracy);

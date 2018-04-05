@@ -1,10 +1,8 @@
 package fyp.fourthyear.cit.ie.watchit.Domain;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
+
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+
 
 import fyp.fourthyear.cit.ie.watchit.R;
 
@@ -21,21 +19,20 @@ public class HRDataAdapter extends RecyclerView.Adapter<HRDataAdapter.ViewHolder
 
     private ArrayList<HeartRate> hrList;
     private int layout;
-    //TODO Add icon to tell if the hour was "stressed" or not
     public HRDataAdapter(ArrayList<HeartRate> hrList, int layout){
         this.hrList=hrList;
         this.layout = layout;
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView day;
         private TextView hour;
         private TextView data;
         private ImageView stressed;
 
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             this.day = view.findViewById(R.id.day);
             this.hour = view.findViewById(R.id.hour);
